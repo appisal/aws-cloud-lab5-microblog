@@ -135,7 +135,7 @@ CREATE TABLE posts (
 
 
 Copy these two links to submit for Assignment 1[cite: 1]:
-* **Live EC2 URL:** `[http://3.111.37.11](http://3.111.37.11)`
+* **Live EC2 URL:** `[http://3.111.37.11]
 * **GitHub Repo URL:** `[https://github.com/](https://github.com/)<appisal>/aws-cloud-lab5-microblog`
 
 ---
