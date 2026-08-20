@@ -127,17 +127,6 @@ The application was tested from the public endpoint after deployment.
 * Security: RDS PostgreSQL access restricted to the EC2 Security Group
 * Evidence: Screenshots submitted with the lab report
 * Report: 1–2 page Assignment 1 report
+`
 
----
 
-## 8. Security Note
-
-Database passwords, AWS access keys, secret keys, and other sensitive credentials are not stored in this GitHub repository.
-
-The application database connection credentials should remain in the EC2 environment/configuration and must not be committed to source control.
-
----
-
-## 9. Lab Reference
-
-This implementation follows the requirements of Cloud Computing Lab 5 — Study and Implementation of AWS RDS and NoSQL Databases.
