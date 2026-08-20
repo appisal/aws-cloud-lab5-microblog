@@ -127,6 +127,211 @@ The application was tested from the public endpoint after deployment.
 * Security: RDS PostgreSQL access restricted to the EC2 Security Group
 * Evidence: Screenshots submitted with the lab report
 * Report: 1–2 page Assignment 1 report
+
 `
+---
+
+# Assignment 2 — DynamoDB Integration
+
+## Application Details
+
+**Application:** Microblog  
+**Database:** Amazon DynamoDB  
+**DynamoDB Table:** `MicroblogPosts`  
+**AWS Region:** `ap-south-1`  
+**Partition Key:** `id`  
+**EC2 Application URL:** `http://3.111.37.11`
+
+---
+
+## 1. Architecture
+
+For Assignment 2, Amazon DynamoDB was used as the NoSQL database.
+
+```text
+Internet
+   |
+   v
+AWS EC2 — Microblog Application
+   |
+   | AWS DynamoDB API
+   v
+Amazon DynamoDB
+   |
+   v
+MicroblogPosts Table
+
+
+2. DynamoDB Table Configuration
+
+| Property      | Value            |
+| ------------- | ---------------- |
+| Table Name    | `MicroblogPosts` |
+| AWS Region    | `ap-south-1`     |
+| Table Status  | `ACTIVE`         |
+| Partition Key | `id`             |
+| Key Type      | `HASH`           |
+
+
+3. DynamoDB Attribute Types
+| Attribute  | DynamoDB Type    | Example                                             |
+| ---------- | ---------------- | --------------------------------------------------- |
+| `id`       | String (`S`)     | `"1"`                                               |
+| `username` | String (`S`)     | `"aditya"`                                          |
+| `age`      | Number (`N`)     | `21`                                                |
+| `active`   | Boolean (`BOOL`) | `true`                                              |
+| `tags`     | List (`L`)       | `["cloud","aws","dynamodb"]`                        |
+| `profile`  | Map (`M`)        | `{"city":"Mumbai","course":"Computer Engineering"}` |
+
+
+4. DynamoDB CRUD Operations
+CREATE
+
+A new item was created in the MicroblogPosts table.
+
+The item contained:
+id       = "1"
+username = "aditya"
+age      = 21
+active   = true
+tags     = ["cloud", "aws", "dynamodb"]
+profile  = {"city": "Mumbai", "course": "Computer Engineering"}
+
+READ
+
+The created item was retrieved using the partition key:
+
+id = "1"
+
+The get-item operation successfully returned the stored item.
+
+UPDATE
+
+The existing item was updated using the update-item operation.
+
+The following values were changed:
+
+age    : 21 → 22
+active : true → false
+
+The updated item was successfully returned after the update.
+
+DELETE
+
+The item was deleted using the delete-item operation.
+
+A final DynamoDB scan was performed after deletion and confirmed that the item was no longer present.
+
+5. Application CRUD Demonstration
+
+The Microblog application running on EC2 was also tested through the application interface.
+
+Operation	Application Action	Result
+Create	Submitted a new Microblog post	Post appeared successfully
+Read	Viewed the created post	Post was displayed
+Update	Edited the created post	Updated post was displayed
+Delete	Deleted the updated post	Post was removed
+
+The CRUD operations were tested using the running Microblog application.
+
+6. EC2 Application
+
+The Microblog application is deployed on AWS EC2 and was successfully accessed through the public endpoint.
+
+EC2 Application URL:
+
+http://3.111.37.11
+
+The application was tested by logging in, creating a post, viewing the post, editing the post, and deleting the post.
+
+7. DynamoDB Verification
+
+The DynamoDB table was verified using AWS CLI commands.
+
+Table Verification
+aws dynamodb describe-table \
+  --table-name MicroblogPosts \
+  --region ap-south-1
+
+The table status was confirmed as:
+
+ACTIVE
+Data Verification
+
+The item was verified using:
+
+aws dynamodb scan \
+  --table-name MicroblogPosts \
+  --region ap-south-1
+
+The scan displayed the stored item and demonstrated the required DynamoDB attribute types.
+
+Final Delete Verification
+
+After deleting the item, a final scan confirmed that the deleted item was no longer present.
+
+8. Evidence Submitted
+
+The following evidence was collected during the implementation:
+
+DynamoDB table MicroblogPosts shown as ACTIVE.
+DynamoDB item showing the required attribute types.
+DynamoDB READ operation.
+DynamoDB UPDATE operation.
+DynamoDB DELETE operation.
+Final DynamoDB scan confirming deletion.
+Microblog application running on EC2.
+Application CREATE and READ demonstration.
+Application UPDATE demonstration.
+Application DELETE demonstration.
+9. Assignment 2 Summary
+
+Assignment 2 demonstrates the use of Amazon DynamoDB as a NoSQL database with the Microblog application.
+
+The implementation includes:
+
+DynamoDB table deployment
+Partition key configuration
+String attribute
+Number attribute
+Boolean attribute
+List attribute
+Map attribute
+CREATE operation
+READ operation
+UPDATE operation
+DELETE operation
+EC2 application testing
+Application-level CRUD testing
+10. Assignment 2 Deliverables
+
+GitHub Repository:
+
+https://github.com/appisal/aws-cloud-lab5-microblog
+
+EC2 Application:
+
+http://3.111.37.11
+
+DynamoDB Table:
+
+MicroblogPosts
+
+AWS Region:
+
+ap-south-1
+
+Database Type:
+
+Amazon DynamoDB
+
+CRUD Operations:
+
+Create, Read, Update, Delete
+
+DynamoDB Attribute Types:
+
+String, Number, Boolean, List, Map
+
 
 
