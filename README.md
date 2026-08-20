@@ -1,100 +1,71 @@
-# aws-cloud-lab5-microblog
-# AWS Cloud Computing Lab 5 - Assignment 1: RDS Integration
+# AWS Cloud Computing Lab 5 — Assignment 1: RDS Integration
 
-**Application Name:** Microblog  
-**Live EC2 URL:** `http://3.111.37.11`  
-**Database Engine:** AWS RDS (PostgreSQL)  
-**DB Instance Identifier:** `microblog-lab5-rds`  
+## Application Details
 
----
-
-## 📌 Architecture & Database Configuration
-- **Compute:** AWS EC2 Instance running Microblog (Python/Flask backend).
-- **Database:** Amazon RDS PostgreSQL (db.t4g.micro, Single-AZ).
-- **Security Rule:** RDS port 5432 is restricted to inbound traffic from the EC2 Security Group ID only.
+**Application:** Microblog
+**Database:** Amazon RDS PostgreSQL
+**RDS Instance:** `microblog-lab5-rds`
+**EC2 URL:** `http://3.111.37.11`
+**AWS Region:** `ap-south-1`
 
 ---
 
-## 🗄️ Database Schema Design (2 Relational Tables)
+## 1. Architecture
 
-### 1. `users` Table
-```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(64) UNIQUE NOT NULL,
-    email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(256) NOT NULL
-);
-2. posts Table
-CREATE TABLE posts (
-    id SERIAL PRIMARY KEY,
-    body TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    user_id INT REFERENCES users(id) ON DELETE CASCADE
-);
+The Microblog Flask application is deployed on an AWS EC2 instance and connected to an Amazon RDS PostgreSQL database.
 
-🚀 Connection & Deployment Steps
-Launched PostgreSQL RDS instance named microblog-lab5-rds.
+**Architecture:**
 
-Configured RDS inbound rule on port 5432 to only allow the EC2 Security Group.
-
-Connected the Microblog Flask application on EC2 using the database endpoint.
-
-Ran database migrations to create the users and posts tables.
-
-
-Follow these simple, step-by-step instructions. Do one step at a time:
-
----
-
-### Step 1: Create a Repository on GitHub
-
-1. Open your browser and go to [github.com](https://github.com).
-2. Log in and click the **+** (plus icon) in the top-right corner $\rightarrow$ click **New repository**.
-3. Name your repository: `aws-cloud-lab5-microblog`.
-4. Keep it **Public**.
-5. Check the box that says **Add a README file**.
-6. Click the green **Create repository** button at the bottom.
-
----
-
-### Step 2: Add Your Content to the README file
-
-1. On your new repository page, click the **pencil icon** (Edit this file) on the right side of `README.md`.
-2. Delete everything inside the editor.
-3. Copy and paste the exact text below:
-
-```markdown
-# AWS Cloud Computing Lab 5 - Assignment 1: RDS Integration
-
-**Application Name:** Microblog  
-**Live EC2 URL:** `http://3.111.37.11`  
-**Database Engine:** AWS RDS (PostgreSQL)  
-**DB Instance Identifier:** `microblog-lab5-rds`  
-
----
-
-## 📌 Architecture & Database Configuration
-- **Compute:** AWS EC2 Instance running Microblog (Python/Flask backend).
-- **Database:** Amazon RDS PostgreSQL (db.t4g.micro, Single-AZ).
-- **Security Rule:** RDS port 5432 is restricted to inbound traffic from the EC2 Security Group ID only.
-
----
-
-## 🗄️ Database Schema Design (2 Relational Tables)
-
-### 1. `users` Table
-```sql
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(64) UNIQUE NOT NULL,
-    email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(256) NOT NULL
-);
-
+```text
+Internet
+   |
+   v
+AWS EC2 — Microblog Flask Application
+   |
+   | PostgreSQL : 5432
+   v
+Amazon RDS PostgreSQL
 ```
 
-### 2. `posts` Table
+The RDS security configuration restricts database access to the EC2 Security Group rather than allowing unrestricted internet access.
+
+---
+
+## 2. RDS Database Configuration
+
+| Setting         | Value                |
+| --------------- | -------------------- |
+| Database Engine | PostgreSQL           |
+| DB Instance     | `microblog-lab5-rds` |
+| Instance Class  | `db.t4g.micro`       |
+| Availability    | Single-AZ            |
+| Port            | `5432`               |
+| Region          | `ap-south-1`         |
+
+### Security
+
+The RDS inbound rule allows PostgreSQL traffic on port `5432` from the EC2 Security Group only.
+
+No unrestricted `0.0.0.0/0` database access is used.
+
+---
+
+## 3. Database Schema
+
+The Assignment 1 database contains relational tables for the application data.
+
+### Users
+
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(64) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    password_hash VARCHAR(256) NOT NULL
+);
+```
+
+### Posts
 
 ```sql
 CREATE TABLE posts (
@@ -103,43 +74,70 @@ CREATE TABLE posts (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     user_id INT REFERENCES users(id) ON DELETE CASCADE
 );
-
 ```
 
----
-
-## 🚀 Connection & Deployment Steps
-
-1. Launched PostgreSQL RDS instance named `microblog-lab5-rds`.
-2. Configured RDS inbound rule on port `5432` to only allow the EC2 Security Group.
-3. Connected the Microblog Flask application on EC2 using the database endpoint.
-4. Ran database migrations to create the `users` and `posts` tables.
+The `posts.user_id` column establishes a relationship with the `users` table.
 
 ---
 
-## 🧪 Demonstration of CRUD Operations
+## 4. Deployment and Connection
 
-| Operation | User Action in UI | Endpoint / Action | Evidence Status |
-| --- | --- | --- | --- |
-| **Create** | Register user / Submit new post | Form Submit | Verified (New post appears) |
-| **Read** | Fetch user dashboard | `GET /index` | Verified (Feed shows posts) |
-| **Update** | Edit post text | Edit Post modal | Verified ("Your post has been updated") |
-| **Delete** | Click delete button & confirm | Delete action | Verified ("Your post has been deleted") |
-
-```
-
-4. Scroll down and click **Commit changes...** $\rightarrow$ click **Commit changes**.
+1. Created the PostgreSQL RDS instance `microblog-lab5-rds`.
+2. Configured the RDS Security Group for PostgreSQL traffic on port `5432`.
+3. Restricted the inbound database rule to the EC2 Security Group.
+4. Connected the Microblog application running on EC2 to the RDS PostgreSQL database.
+5. Applied the required database migrations/schema.
+6. Verified that the application could communicate with the database.
 
 ---
 
+## 5. CRUD Demonstration
 
+The Microblog application demonstrates the required CRUD operations.
 
-Copy these two links to submit for Assignment 1[cite: 1]:
-* **Live EC2 URL:** `[http://3.111.37.11]
-* **GitHub Repo URL:** `[https://github.com/](https://github.com/)<appisal>/aws-cloud-lab5-microblog`
+| Operation  | Application Action          | Result                       |
+| ---------- | --------------------------- | ---------------------------- |
+| **Create** | Register user / create post | New record is created        |
+| **Read**   | Open the feed/dashboard     | Stored records are displayed |
+| **Update** | Edit an existing record     | Record is updated            |
+| **Delete** | Delete an existing record   | Record is removed            |
+
+### CRUD Evidence
+
+Screenshots/evidence are included with the lab submission to demonstrate the operations from the running EC2 application.
 
 ---
 
-Let me know once you have finished this, and we will move to **Assignment 2 (DynamoDB)**[cite: 1].
+## 6. EC2 Application
 
-```
+The deployed Microblog application is available at:
+
+**EC2 URL:** `http://3.111.37.11`
+
+The application was tested from the public endpoint after deployment.
+
+---
+
+## 7. Assignment 1 Deliverables
+
+* GitHub Repository: `https://github.com/appisal/aws-cloud-lab5-microblog`
+* EC2 Application URL: `http://3.111.37.11`
+* Database: Amazon RDS PostgreSQL
+* CRUD: Create, Read, Update, Delete
+* Security: RDS PostgreSQL access restricted to the EC2 Security Group
+* Evidence: Screenshots submitted with the lab report
+* Report: 1–2 page Assignment 1 report
+
+---
+
+## 8. Security Note
+
+Database passwords, AWS access keys, secret keys, and other sensitive credentials are not stored in this GitHub repository.
+
+The application database connection credentials should remain in the EC2 environment/configuration and must not be committed to source control.
+
+---
+
+## 9. Lab Reference
+
+This implementation follows the requirements of Cloud Computing Lab 5 — Study and Implementation of AWS RDS and NoSQL Databases.
